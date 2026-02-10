@@ -1,0 +1,7 @@
+.auth-shell { min-height: 100vh; display:flex; align-items:center; justify-content:center; background: radial-gradient(circle at top,#1d4ed8,#0b1120 70%); padding: 1rem; }
+.auth-card { width: 100%; max-width: 430px; background: rgba(16,24,40,.82); backdrop-filter: blur(8px); border:1px solid #334155; border-radius: 20px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+.auth-card h1 { margin: 0 0 .25rem; color: #c4b5fd; }
+.auth-card p { margin:0 0 1rem; color:#94a3b8; }
+.auth-form { display:flex; flex-direction:column; gap:.8rem; }
+.auth-form input { padding:.8rem; border-radius: 10px; border:1px solid #334155; background:#020617; color:white; }
+.auth-form button { padding:.8rem; border:0; border-radius: 10px; background: linear-gradient(90deg,#a855f7,#06b6d4); color:white; font-weight:700; }
