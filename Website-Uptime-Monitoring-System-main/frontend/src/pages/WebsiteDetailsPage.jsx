@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import api from '../api/client';
+import { addTrendLine } from '../utils/regression';
 import '../styles/pages.css';
 
 export default function WebsiteDetailsPage() {
@@ -20,11 +21,15 @@ export default function WebsiteDetailsPage() {
     load();
   }, [monitorId]);
 
-  const chartData = useMemo(() => timelineData.checks.map((check) => ({
-    at: new Date(check.checkedAt).toLocaleTimeString(),
-    responseTime: check.responseTimeMs || 0,
-    status: check.status === 'up' ? 1 : 0
-  })), [timelineData.checks]);
+  const chartData = useMemo(() => {
+    const baseData = timelineData.checks.map((check) => ({
+      at: new Date(check.checkedAt).toLocaleTimeString(),
+      responseTime: check.responseTimeMs || 0,
+      status: check.status === 'up' ? 1 : 0
+    }));
+
+    return addTrendLine(baseData, 'responseTime', 'trendLine');
+  }, [timelineData.checks]);
 
   if (loading) {
     return <p className="hint">Loading website details...</p>;
@@ -54,6 +59,7 @@ export default function WebsiteDetailsPage() {
             <YAxis />
             <Tooltip />
             <Line type="monotone" dataKey="responseTime" stroke="#14b8a6" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="trendLine" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="6 4" />
           </LineChart>
         </ResponsiveContainer>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { addTrendLine } from '../utils/regression';
 import '../styles/dashboard.css';
 
 const colors = ['#22c55e', '#ef4444'];
@@ -29,7 +30,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!selected?._id) return;
     api.get(`/monitors/${selected._id}/timeline`).then(({ data }) => {
-      setTimeline(data.checks.map((c) => ({ t: new Date(c.checkedAt).toLocaleTimeString(), ms: c.responseTimeMs || 0, status: c.status === 'up' ? 1 : 0 })));
+      const baseTimeline = data.checks.map((c) => ({ t: new Date(c.checkedAt).toLocaleTimeString(), ms: c.responseTimeMs || 0, status: c.status === 'up' ? 1 : 0 }));
+      setTimeline(addTrendLine(baseTimeline, 'ms', 'trendLine'));
       setIncidents(data.incidents);
     });
   }, [selected]);
@@ -100,6 +102,7 @@ export default function DashboardPage() {
                 <YAxis />
                 <Tooltip />
                 <Line type="monotone" dataKey="ms" stroke="#a855f7" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="trendLine" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="6 4" />
               </LineChart>
             </ResponsiveContainer>
           </div>
